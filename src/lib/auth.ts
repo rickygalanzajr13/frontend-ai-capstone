@@ -34,11 +34,20 @@ export async function signInWithEmail(
 }
 
 export async function signInWithGoogle() {
+  const redirectTo =
+    typeof window !== "undefined" ? window.location.origin : "";
+
   return supabase.auth.signInWithOAuth({
     provider: "google",
+    ...(redirectTo ? { options: { redirectTo } } : {}),
   });
 }
 
 export async function signOut() {
   return supabase.auth.signOut();
+}
+
+export async function getCurrentSession() {
+  const { data } = await supabase.auth.getSession();
+  return data.session;
 }

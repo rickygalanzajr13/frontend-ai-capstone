@@ -3,7 +3,9 @@ import {
   Link,
   useNavigate,
 } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { useAuth } from "@/hooks/use-auth";
 
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
@@ -41,6 +43,7 @@ type Errors = { email?: string; password?: string };
 
 function SignIn() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,6 +53,11 @@ function SignIn() {
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState("");
 
+  // Supabase is the source of truth: once a session exists, leave the page.
+  useEffect(() => {
+    if (!authLoading && user) navigate({ to: "/", replace: true });
+  }, [authLoading, user, navigate]);
+
   const validate = (): Errors => {
     const next: Errors = {};
     if (!email.trim()) next.email = "Please enter your email address.";
@@ -57,6 +65,7 @@ function SignIn() {
     if (!password) next.password = "Please enter your password.";
     return next;
   };
+
 
   return (
     <AuthLayout
@@ -75,23 +84,32 @@ function SignIn() {
         noValidate
         className="mt-8 space-y-4"
         onSubmit={async (e) => {
-            e.preventDefault();
+          e.preventDefault();
+          setAuthError("");
+          setSubmitted(false);
 
-            const next = validate();
-            setErrors(next);
+          const next = validate();
+          setErrors(next);
+          if (Object.keys(next).length > 0) return;
 
-            if (Object.keys(next).length > 0) {
-              return;
-            }
+          setLoading(true);
+          try {
             const { error } = await signInWithEmail(email, password);
             if (error) {
-              setErrors({
-                password: error.message,
-              });
+              setAuthError(error.message);
               return;
             }
-            navigate({ to: "/" });
-          }}
+            setSubmitted(true);
+            // useAuth picks up SIGNED_IN; redirect once the session lands.
+            navigate({ to: "/", replace: true });
+          } catch (err) {
+            console.error("Sign-in failed:", err);
+            setAuthError("Something went wrong while signing you in.");
+          } finally {
+            setLoading(false);
+          }
+        }}
+
       >
         <AuthField
           label="Email"

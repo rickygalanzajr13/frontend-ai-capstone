@@ -1,7 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import { useAuth } from "@/hooks/use-auth";
+import { signOut } from "@/lib/auth";
 import { SprocktdMark } from "./SprocktdMark";
+
 
 const links = [
   { label: "Home", to: "/" as const },
@@ -12,6 +15,7 @@ const links = [
 
 export function SiteNav() {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -91,12 +95,33 @@ export function SiteNav() {
               ))}
             </ul>
           </nav>
-          <Link
-            to="/signin"
-            className="shrink-0 rounded-md border border-border-strong px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary hover:bg-surface"
-          >
-            Sign In
-          </Link>
+          {loading ? (
+            <div
+              aria-hidden
+              className="h-9 w-24 shrink-0 animate-pulse rounded-md bg-surface"
+            />
+          ) : user ? (
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <button
+                type="button"
+                onClick={async () => {
+                  await signOut();
+                  navigate({ to: "/" });
+                }}
+                className="shrink-0 rounded-md border border-border-strong px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary hover:bg-surface"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/signin"
+              className="shrink-0 rounded-md border border-border-strong px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary hover:bg-surface"
+            >
+              Sign In
+            </Link>
+          )}
+
         </div>
       </div>
     </header>
