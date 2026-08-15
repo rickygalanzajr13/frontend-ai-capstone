@@ -50,7 +50,9 @@ export function useProfile() {
     loading: authLoading || (Boolean(user) && profileQuery.isLoading),
     error: profileQuery.error,
     data: profileQuery.data,
+    refetch: profileQuery.refetch,
     topGenres,
     genresLoading: genresQuery.isLoading,
   };
+
 }

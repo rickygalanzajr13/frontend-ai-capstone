@@ -1,10 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { MovieGrid } from "@/components/media/MovieGrid";
+import { AvatarEditor } from "@/components/profile/AvatarEditor";
+import { BioEditor } from "@/components/profile/BioEditor";
 import { useProfile } from "@/hooks/use-profile";
-import { avatarInitial, formatJoined, toMovie } from "@/lib/profile-data";
+import {
+  formatJoined,
+  resolveAvatarUrl,
+  toMovie,
+} from "@/lib/profile-data";
+
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -38,7 +46,20 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 function ProfilePage() {
-  const { user, loading, data, topGenres, genresLoading } = useProfile();
+  const { user, loading, data, topGenres, genresLoading, refetch } = useProfile();
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+  const avatarValue = data?.profile?.avatar_url ?? null;
+
+  useEffect(() => {
+    let active = true;
+    void resolveAvatarUrl(avatarValue).then((url) => {
+      if (active) setAvatarSrc(url);
+    });
+    return () => {
+      active = false;
+    };
+  }, [avatarValue]);
+
 
   if (loading) {
     return (
@@ -48,8 +69,8 @@ function ProfilePage() {
             <div className="h-20 w-20 rounded-full bg-surface" />
             <div className="h-8 w-56 rounded bg-surface" />
             <div className="h-4 w-80 rounded bg-surface" />
-            <div className="grid grid-cols-2 gap-4 pt-6 sm:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
+            <div className="grid grid-cols-4 gap-4 pt-6">
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="h-24 rounded-xl bg-surface" />
               ))}
             </div>
@@ -106,20 +127,13 @@ function ProfilePage() {
         <div aria-hidden className="absolute inset-0 aura" />
         <div className="relative mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
           <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-5">
-            {profile?.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={`${displayName}'s avatar`}
-                className="h-16 w-16 shrink-0 rounded-full border border-border-strong object-cover sm:h-20 sm:w-20"
-              />
-            ) : (
-              <div
-                aria-hidden
-                className="grid h-16 w-16 shrink-0 place-items-center rounded-full border border-border-strong bg-surface font-display text-2xl sm:h-20 sm:w-20"
-              >
-                {avatarInitial(profile?.display_name, profile?.username)}
-              </div>
-            )}
+            <AvatarEditor
+              userId={user.id}
+              avatarSrc={avatarSrc}
+              displayName={displayName}
+              username={profile?.username ?? null}
+              onSaved={() => void refetch()}
+            />
             <div className="min-w-0">
               <h1 className="truncate font-display text-3xl font-normal sm:text-4xl">
                 {displayName}
@@ -135,13 +149,13 @@ function ProfilePage() {
             </div>
           </div>
 
-          {profile?.bio ? (
-            <p className="mt-6 max-w-lg text-sm leading-relaxed text-muted-foreground">
-              {profile.bio}
-            </p>
-          ) : null}
+          <BioEditor
+            userId={user.id}
+            bio={profile?.bio ?? null}
+            onSaved={() => void refetch()}
+          />
 
-          <dl className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <dl className="mt-10 grid grid-cols-4 gap-4">
             {stats.map((s) => (
               <div
                 key={s.label}
