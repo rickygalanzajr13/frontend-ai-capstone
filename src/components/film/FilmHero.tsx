@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 
 import { FilmPoster } from "@/components/site/FilmPoster";
 import type { OmdbFilm } from "@/lib/omdb.functions";
+import { FavoriteButton } from "./FavoriteButton";
+import { ListToggleButton } from "./ListToggleButton";
 import { FilmStory } from "./FilmStory";
 import { MovieFacts } from "./MovieFacts";
 
@@ -85,19 +87,10 @@ export function FilmHero({ film, sidebar }: { film: OmdbFilm; sidebar?: ReactNod
                   ) : null}
                 </div>
 
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    className="rounded-md bg-primary px-5 py-2.5 text-sm text-primary-foreground transition-opacity duration-200 hover:opacity-90"
-                  >
-                    Add to Watchlist
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-md border border-border-strong px-5 py-2.5 text-sm text-foreground transition-colors duration-200 hover:bg-surface"
-                  >
-                    Mark as Watched
-                  </button>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <ListToggleButton film={film} kind="watchlist" variant="primary" />
+                  <ListToggleButton film={film} kind="watched" />
+                  <FavoriteButton film={film} />
                 </div>
               </div>
             </div>
