@@ -111,3 +111,22 @@ export const getPosters = createServerFn({ method: "GET" })
     );
     return { posters: Object.fromEntries(entries) as Record<string, string> };
   });
+
+  export const getGenres = createServerFn({ method: "GET" })
+  .inputValidator((input: { ids: string[] }) => ({
+    ids: (Array.isArray(input.ids) ? input.ids : []).slice(0, 24).map((id) => String(id).slice(0, 20)),
+  }))
+  .handler(async ({ data }) => {
+    const entries = await Promise.all(
+      data.ids.map(async (id) => {
+        try {
+          const json = await omdb({ i: id });
+          const genre = String(json["Genre"] ?? "");
+          return [id, genre] as const;
+        } catch {
+          return [id, ""] as const;
+        }
+      }),
+    );
+    return { genres: Object.fromEntries(entries) as Record<string, string> };
+  });

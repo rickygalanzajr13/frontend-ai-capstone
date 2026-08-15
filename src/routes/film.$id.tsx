@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { RecordView } from "@/components/film/RecordView";
 
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
@@ -50,6 +51,7 @@ function FilmPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteNav />
+      <RecordView film={film} />
       <main>
         <FilmHero
           film={film}
@@ -63,7 +65,6 @@ function FilmPage() {
         />
         <div className="space-y-16 py-16 sm:space-y-20 sm:py-20">
           <AiRecommendation film={film} />
-          
           <SimilarMovies />
           <Reviews />
           <FilmCta />
@@ -78,4 +79,5 @@ function FilmPage() {
     </div>
   );
 }
+
 
