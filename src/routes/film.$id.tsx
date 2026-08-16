@@ -65,7 +65,7 @@ function FilmPage() {
         />
         <div className="space-y-16 py-16 sm:space-y-20 sm:py-20">
           <AiRecommendation film={film} />
-          <SimilarMovies />
+          <SimilarMovies film={film} />
           <Reviews />
           <FilmCta />
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
