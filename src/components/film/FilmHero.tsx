@@ -4,6 +4,7 @@ import { FilmPoster } from "@/components/site/FilmPoster";
 import type { OmdbFilm } from "@/lib/omdb.functions";
 import { FavoriteButton } from "./FavoriteButton";
 import { ListToggleButton } from "./ListToggleButton";
+import { AddToCollectionButton } from "./AddToCollectionButton";
 import { FilmStory } from "./FilmStory";
 import { MovieFacts } from "./MovieFacts";
 
@@ -91,6 +92,7 @@ export function FilmHero({ film, sidebar }: { film: OmdbFilm; sidebar?: ReactNod
                   <ListToggleButton film={film} kind="watchlist" variant="primary" />
                   <ListToggleButton film={film} kind="watched" />
                   <FavoriteButton film={film} />
+                  <AddToCollectionButton film={film} />
                 </div>
               </div>
             </div>

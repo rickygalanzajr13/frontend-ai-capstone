@@ -18,6 +18,7 @@ import { Route as WatchlistRouteImport } from './routes/watchlist'
 import { Route as CollectionsIndexRouteImport } from './routes/collections.index'
 import { Route as CollectionsSlugRouteImport } from './routes/collections.$slug'
 import { Route as FilmIdRouteImport } from './routes/film.$id'
+import { Route as CollectionsMineIdRouteImport } from './routes/collections.mine.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const FilmIdRoute = FilmIdRouteImport.update({
   path: '/film/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CollectionsMineIdRoute = CollectionsMineIdRouteImport.update({
+  id: '/collections/mine/$id',
+  path: '/collections/mine/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/collections/$slug': typeof CollectionsSlugRoute
   '/film/$id': typeof FilmIdRoute
   '/collections/': typeof CollectionsIndexRoute
+  '/collections/mine/$id': typeof CollectionsMineIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/collections/$slug': typeof CollectionsSlugRoute
   '/film/$id': typeof FilmIdRoute
   '/collections': typeof CollectionsIndexRoute
+  '/collections/mine/$id': typeof CollectionsMineIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/collections/$slug': typeof CollectionsSlugRoute
   '/film/$id': typeof FilmIdRoute
   '/collections/': typeof CollectionsIndexRoute
+  '/collections/mine/$id': typeof CollectionsMineIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/collections/$slug'
     | '/film/$id'
     | '/collections/'
+    | '/collections/mine/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/collections/$slug'
     | '/film/$id'
     | '/collections'
+    | '/collections/mine/$id'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/collections/$slug'
     | '/film/$id'
     | '/collections/'
+    | '/collections/mine/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   CollectionsSlugRoute: typeof CollectionsSlugRoute
   FilmIdRoute: typeof FilmIdRoute
   CollectionsIndexRoute: typeof CollectionsIndexRoute
+  CollectionsMineIdRoute: typeof CollectionsMineIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FilmIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/collections/mine/$id': {
+      id: '/collections/mine/$id'
+      path: '/collections/mine/$id'
+      fullPath: '/collections/mine/$id'
+      preLoaderRoute: typeof CollectionsMineIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   CollectionsSlugRoute: CollectionsSlugRoute,
   FilmIdRoute: FilmIdRoute,
   CollectionsIndexRoute: CollectionsIndexRoute,
+  CollectionsMineIdRoute: CollectionsMineIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

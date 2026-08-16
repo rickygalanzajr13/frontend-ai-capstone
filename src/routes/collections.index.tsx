@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { MyCollections } from "@/components/collections/MyCollections";
 import { collections } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/collections/")({
@@ -38,7 +39,18 @@ function CollectionsPage() {
           Each collection is a small argument about cinema. Open one and see the case.
         </p>
 
-        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <MyCollections />
+
+        <p className="eyebrow mt-16">Collections by community</p>
+        <h2 className="mt-3 font-display text-2xl font-normal">
+          Assembled by people who watch closely.
+        </h2>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+          Editorial shelves from the Sprocktd community — browse freely, they aren't yours
+          to edit.
+        </p>
+
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {collections.map((c) => (
             <li key={c.slug}>
               <Link

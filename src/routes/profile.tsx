@@ -141,11 +141,6 @@ function ProfilePage() {
               <p className="mt-1 truncate text-sm text-muted-foreground">
                 {[user.email, joined].filter(Boolean).join(" · ")}
               </p>
-              {profile?.username ? (
-                <p className="mt-1 truncate text-sm text-muted-foreground">
-                  @{profile.username}
-                </p>
-              ) : null}
             </div>
           </div>
 
