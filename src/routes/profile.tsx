@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { MovieGrid } from "@/components/media/MovieGrid";
+import { ProfileRow } from "@/components/profile/ProfileRow";
 import { AvatarEditor } from "@/components/profile/AvatarEditor";
 import { BioEditor } from "@/components/profile/BioEditor";
 import { useProfile } from "@/hooks/use-profile";
@@ -195,28 +195,19 @@ function ProfilePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl space-y-16 px-5 py-16 sm:px-8 sm:py-20">
-        <section>
-          <h2 className="font-display text-2xl font-normal sm:text-3xl">Favourites</h2>
-          <div className="mt-8">
-            {favourites.length > 0 ? (
-              <MovieGrid films={favourites} />
-            ) : (
-              <p className="text-sm text-muted-foreground">No favourite films yet.</p>
-            )}
-          </div>
-        </section>
-        <section>
-          <h2 className="font-display text-2xl font-normal sm:text-3xl">Recently viewed</h2>
-          <div className="mt-8">
-            {recent.length > 0 ? (
-              <MovieGrid films={recent} />
-            ) : (
-              <p className="text-sm text-muted-foreground">No recently viewed films yet.</p>
-            )}
-          </div>
-        </section>
+      <div className="space-y-16 py-16 sm:py-20">
+        <ProfileRow
+          title="Favourites"
+          films={favourites}
+          emptyMessage="No favourite films yet."
+        />
+        <ProfileRow
+          title="Recently viewed"
+          films={recent}
+          emptyMessage="No recently viewed films yet."
+        />
       </div>
+
     </Shell>
   );
 }
