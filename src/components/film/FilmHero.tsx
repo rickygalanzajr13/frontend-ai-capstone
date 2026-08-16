@@ -88,11 +88,16 @@ export function FilmHero({ film, sidebar }: { film: OmdbFilm; sidebar?: ReactNod
                   ) : null}
                 </div>
 
-                <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <ListToggleButton film={film} kind="watchlist" variant="primary" />
-                  <ListToggleButton film={film} kind="watched" />
+                <div className="mt-8 flex flex-wrap items-start gap-3">
+                  <ListToggleButton
+                    film={film}
+                    kind="watchlist"
+                    variant="primary"
+                    iconOnly
+                  />
+                  <ListToggleButton film={film} kind="watched" iconOnly />
                   <FavoriteButton film={film} />
-                  <AddToCollectionButton film={film} />
+                  <AddToCollectionButton film={film} iconOnly />
                 </div>
               </div>
             </div>

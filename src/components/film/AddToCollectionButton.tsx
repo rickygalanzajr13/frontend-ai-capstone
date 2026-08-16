@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { FolderPlus } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
 import type { OmdbFilm } from "@/lib/omdb.functions";
@@ -8,9 +9,16 @@ import {
   fetchMyCollections,
   type UserCollection,
 } from "@/lib/collections-data";
+import { cn } from "@/lib/utils";
 
 /** Adds the current film to one of the signed-in user's collections. */
-export function AddToCollectionButton({ film }: { film: OmdbFilm }) {
+export function AddToCollectionButton({
+  film,
+  iconOnly = false,
+}: {
+  film: OmdbFilm;
+  iconOnly?: boolean;
+}) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [collections, setCollections] = useState<UserCollection[]>([]);
@@ -67,6 +75,7 @@ export function AddToCollectionButton({ film }: { film: OmdbFilm }) {
         type="button"
         aria-expanded={open}
         aria-haspopup="true"
+        aria-label="Add to Collection"
         onClick={() => {
           if (!user) {
             setMessage("Sign in to save films to a collection.");
@@ -74,9 +83,19 @@ export function AddToCollectionButton({ film }: { film: OmdbFilm }) {
           }
           setOpen((v) => !v);
         }}
-        className="rounded-md border border-border-strong px-5 py-2.5 text-sm text-foreground transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className={cn(
+          "rounded-md border border-border-strong text-foreground transition-colors hover:bg-surface",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          iconOnly
+            ? "grid h-[42px] w-[42px] place-items-center"
+            : "px-5 py-2.5 text-sm",
+        )}
       >
-        Add to Collection
+        {iconOnly ? (
+          <FolderPlus aria-hidden className="h-4.5 w-4.5" strokeWidth={1.75} />
+        ) : (
+          "Add to Collection"
+        )}
       </button>
 
       {open && user ? (
